@@ -2,7 +2,7 @@ from typing import Optional, Tuple, Union
 
 import torch
 from torch.autograd import Function
-from torch.cuda.amp import custom_bwd, custom_fwd
+from torch.amp import custom_bwd, custom_fwd
 
 import torchsparse.backend
 from torchsparse import SparseTensor
@@ -16,7 +16,7 @@ __all__ = ['conv3d']
 class ConvolutionFunction(Function):
 
     @staticmethod
-    @custom_fwd(cast_inputs=torch.half)
+    @custom_fwd(cast_inputs=torch.half, device_type='cuda')
     def forward(ctx,
                 input: torch.Tensor,
                 weight: torch.Tensor,
@@ -64,8 +64,8 @@ class ConvolutionFunction(Function):
         return output
 
     @staticmethod
-    @custom_bwd
-    def backward(ctx, grad_output: torch.Tensor):
+    @custom_bwd(device_type='cuda')
+    def backward(ctx, grad_output: torch.Tensor,):
         input, weight, nbmaps, nbsizes, transposed = ctx.for_backwards
 
         grad_input = torch.zeros_like(input)
