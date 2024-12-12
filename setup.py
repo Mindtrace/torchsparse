@@ -7,7 +7,8 @@ from setuptools import find_packages, setup
 from torch.utils.cpp_extension import (CUDA_HOME, BuildExtension, CppExtension,
                                      CUDAExtension)
 
-from torchsparse import __version__
+# Replace with direct version string
+VERSION = '1.4.0'  # or whatever version you're using
 
 if ((torch.cuda.is_available() and CUDA_HOME is not None)
         or (os.getenv('FORCE_CUDA', '0') == '1')):
@@ -29,7 +30,7 @@ extra_compile_args = {
 
 setup(
     name='torchsparse',
-    version=__version__,
+    version=VERSION,  # Use the direct version string
     packages=find_packages(),
     ext_modules=[
         extension_type('torchsparse.backend',
@@ -40,7 +41,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'torch>=1.7.0',
-        'numpy',
+        'numpy>=1.20.0,<2.0.0',  # Add numpy constraint
     ],
     python_requires='>=3.7',
 )
